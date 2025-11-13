@@ -6,12 +6,12 @@ function App() {
   const [nanopath, setnanopath] = useState("")
   const handleapi = () => {
     if (!url.trim()) return
-    fetch(`http://localhost:3000/url?url=${url}`, {
+    fetch(`https://nano-path.onrender.com/url?url=${url}`, {
       "method": "post"
     }
     ).then((response) => response.json())
       .then((data) => {
-        setnanopath(`http://localhost:3000/url?id=${data.id}`)
+        setnanopath(`https://nano-path.onrender.com/url?id=${data.id}`)
         console.log(data)
       })
       .catch((e) => console.error(e))
