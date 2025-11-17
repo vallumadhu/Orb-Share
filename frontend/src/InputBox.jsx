@@ -6,6 +6,7 @@ export default function InputBox() {
             <input
                 type="text"
                 className="url-input"
+                placeholder="Enter URL to Shortener"
                 onChange={(e) => seturl(e.target.value)}
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {

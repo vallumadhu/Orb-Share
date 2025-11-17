@@ -6,7 +6,7 @@ export default function Header() {
         <header className="header">
             <nav className="nav">
                 <div className="nav-left">
-                    <Link to="" className="nav-link"><p>Home</p></Link>
+                    <Link to="/send-note" className="nav-link"><p>Send Note</p></Link>
                     <Link to="/custom-id" className="nav-link"><p>Custom ID</p></Link>
                 </div>
 
@@ -14,7 +14,7 @@ export default function Header() {
                     <Link to="/" className="brand">
                         <h1 className="title">Nano Path</h1>
                     </Link>
-                    <p className="subtitle">Your favorite URL shortener</p>
+                    <p className="subtitle">Share Anything with one simple link</p>
                 </div>
 
                 <div className="nav-right">
@@ -31,6 +31,7 @@ export default function Header() {
             <div className={`sideBar ${showMenu ? "sideBarshow" : "sideBarhide"}`}>
                 <nav>
                     <Link to="" className="nav-link"><p>Home</p></Link>
+                    <Link to="/send-note" className="nav-link"><p>Send Note</p></Link>
                     <Link to="/custom-id" className="nav-link"><p>Custom ID</p></Link>
                     <Link to="/about" className="nav-link"><p>About</p></Link>
                 </nav>

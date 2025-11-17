@@ -8,6 +8,7 @@ import Login from './login.jsx'
 import About from './About.jsx'
 import InputBox from './InputBox.jsx'
 import CustomInputBox from './CustomInputBox.jsx'
+import Note from './Note.jsx'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='' element={<Home />} >
           <Route path='' element={<InputBox />} />
           <Route path='custom-id' element={<CustomInputBox />} />
+          <Route path='send-note' element={<Note />} />
         </Route>
         <Route path="about" element={<About />} />
         <Route path="login" element={<Login />} />
