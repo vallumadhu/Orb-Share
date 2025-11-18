@@ -1,7 +1,7 @@
-import { useRef, useState } from "react"
-import { Link, useOutletContext } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
+import { Link, useOutletContext, useParams } from "react-router-dom"
 
-export default function Note() {
+export default function ReciveNote() {
     const { setalert } = useOutletContext()
     const textAreaRef = useRef()
 
@@ -11,30 +11,19 @@ export default function Note() {
     }
 
     const [note, setnote] = useState("")
-    const [noteid, setnoteid] = useState("")
-
-    const getRandomnoteid = async () => {
-        try {
-            const res = await fetch("https://nano-path.onrender.com/note-random-id")
-            const message = await res.json()
-            setnoteid(message.id)
-        } catch (e) {
-            console.error(e)
-            setalert("Something went wrong!", "bad")
-        }
-    }
+    const { id } = useParams()
 
     const postNote = async () => {
         if (!note.trim()) {
             setalert("Note can't be empty", "bad")
             return
         }
-        if (!noteid.trim()) {
+        if (!id.trim()) {
             setalert("Give your note a name", "bad")
             return
         }
         try {
-            const res = await fetch(`https://nano-path.onrender.com/note?id=${noteid}`, {
+            const res = await fetch(`https://nano-path.onrender.com/updatenote?id=${id}`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -53,15 +42,44 @@ export default function Note() {
         }
     }
 
+    useEffect(() => {
+        async function fetchNote() {
+            try {
+                const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`);
+                const data = await res.json();
+                setnote(data.note.note)
+            } catch (e) {
+                setalert("No Note Found", "bad");
+                try {
+                    const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        method: "post",
+                        body: JSON.stringify({
+                            note: " "
+                        })
+                    })
+                    if (res.status == 200) {
+                        setalert(`Created a note with ${id}`, "good")
+                    }
+
+                } catch (e) {
+                    console.error(e)
+                    setalert("Try again", "bad")
+                }
+            }
+        }
+
+        fetchNote();
+    }, []);
+
+
     return (<section className="note-section">
         <div className="text-box">
-            <textarea name="" id="" ref={textAreaRef} onInput={heightHandle} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done."></textarea>
+            <textarea name="" id="" ref={textAreaRef} onInput={heightHandle} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done." value={note}></textarea>
         </div>
         <div className="note-controls">
-            <div className="note-id-controls">
-                <input type="text" placeholder="Enter note name" className="note-name" onChange={(e) => setnoteid(e.target.value)} value={noteid} />
-                <button onClick={getRandomnoteid}>Randomize</button>
-            </div>
             <div className="protectionBox">
                 <div className="option">
                     <label>Allow others to view:</label>

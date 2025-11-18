@@ -237,11 +237,7 @@ main {
 }
 
 
-.generate-btn,
-.result-box button,
-.nav-right button,
-.protectionOverlay .login-btn,
-.save-btn {
+button {
     background: linear-gradient(135deg, #4a1ac6, #6238ff);
     color: #fff;
     border: none;
@@ -254,11 +250,7 @@ main {
     box-shadow: 0 4px 12px rgba(74, 26, 198, 0.25);
 }
 
-.generate-btn:hover,
-.result-box button:hover,
-.header .login-btn:hover,
-.protectionOverlay .login-btn:hover,
-.save-btn:hover {
+button:hover {
     background: linear-gradient(135deg, #5e2ae0, #7a4dff);
     box-shadow: 0 6px 20px rgba(100, 60, 255, 0.4);
     transform: translateY(-3px) scale(1.03);
@@ -412,6 +404,21 @@ input {
     outline: none;
 }
 
+.note-id-controls {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.note-id-controls button {
+    padding: 10px;
+}
+
+.note-id-controls .note-name {
+    font-size: 1rem;
+}
+
 .protectionOverlay {
     position: absolute;
     width: 100%;
@@ -536,8 +543,8 @@ input {
     .protectionBox {
         margin-top: 0px;
     }
-    
-    .text-box{
+
+    .text-box {
         width: 95%;
         min-width: 0px;
     }

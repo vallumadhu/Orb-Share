@@ -49,7 +49,7 @@ const urlModel = mongoose.model("urlModel", urlSchema)
 const noteModel = mongoose.model("noteModel", noteSchema)
 
 app.use(cors({
-    origin: ["https://nanopath.netlify.app", "*"],
+    origin: ["https://nanopath.netlify.app"],
     methods: ["GET", "POST"],
 }));
 
@@ -148,7 +148,7 @@ app.get("/note", async (req, res) => {
 
     res.status(200).json({ "note": note })
 })
-app.post("/note-random-id", async (req, res) => {
+app.get("/note-random-id", async (req, res) => {
     let id = null;
     while (true) {
         id = randomWords.generate(2).join("-")

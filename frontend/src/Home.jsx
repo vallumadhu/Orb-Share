@@ -67,7 +67,7 @@ export default function Home() {
 
     return (
         <>
-            <Outlet context={{ ishandling, seturl, setcustomid, customidhandleapi, handleapi }} />
+            <Outlet context={{ ishandling, seturl, setcustomid, customidhandleapi, handleapi,setalert }} />
             {nanopath && (
                 <div className="result-box">
                     <div className="result-container">
