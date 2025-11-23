@@ -355,7 +355,7 @@ body::-webkit-scrollbar-thumb {
 .loginBox {
     display: none;
     position: absolute;
-    top: 30px;
+    top: 40px;
     right: 10px;
     font-size: 1.6rem;
     background: none;

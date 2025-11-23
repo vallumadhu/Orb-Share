@@ -5,6 +5,7 @@ const crypto = require("crypto")
 const cors = require("cors");
 require("dotenv").config();
 const jwt = require('jsonwebtoken');
+const { type } = require("os");
 const PORT = process.env.PORT || 3000
 
 
@@ -25,6 +26,20 @@ const authenticate = (req, res, next) => {
     }
 };
 
+const emailMatch = (req, email) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return false;
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return email == decoded.userId
+    } catch (err) {
+        return false;
+    }
+}
+
 mongoose.connect(process.env.ATLAS_URL)
     .then(() => console.log("Mongodb connected"))
     .catch((e) => console.error("failed to connect to mongodb", e.message))
@@ -43,6 +58,18 @@ const noteSchema = mongoose.Schema(
         note: {
             type: String,
             required: true
+        },
+        view: {
+            type: Boolean,
+            default: true
+        },
+        edit: {
+            type: Boolean,
+            default: true
+        },
+        access: {
+            type: [String],
+            default: []
         }
     }
 )
@@ -76,21 +103,25 @@ app.use(cors({
 app.use(express.json());
 
 app.post("/note", async (req, res) => {
-    const query = req.query
-    const body = req.body
-    if (!query.id) {
+    const { id } = req.query
+    let { note, view = false, edit = false, access = [], email = null } = req.body
+    email = email ? email.toLowerCase() : null
+    if (!id) {
         return res.status(400).json({ message: "id query is required" })
     }
-    const existing = await noteModel.findOne({ id: query.id })
+    const existing = await noteModel.findOne({ id })
     if (existing) {
         return res.status(400).json({ message: "note already exists with id" })
     }
-    if (!body.note) {
+    if (!note) {
         return res.status(400).json({ message: "note is required" })
     }
-    body.email = body.email ?? null
-
-    const newNode = new noteModel({ id: query.id, note: body.note, email: body.email })
+    if (view || edit || access || email) {
+        if (!emailMatch(req, email)) {
+            return res.status(401).json({ message: "authentication error" })
+        }
+    }
+    const newNode = new noteModel({ id, note, email, view, edit, access })
     await newNode.save()
 
     return res.status(200).json(newNode)
@@ -98,6 +129,8 @@ app.post("/note", async (req, res) => {
 
 app.get("/note", async (req, res) => {
     const query = req.query
+    let { email = null } = req.body
+    email = email ? email.toLowerCase() : null
     if (!query.id) {
         return res.status(400).json({ message: "id query is required" })
     }
@@ -105,7 +138,13 @@ app.get("/note", async (req, res) => {
     if (!note) {
         return res.status(404).json({ message: "note doesn't exist" })
     }
-
+    if (note.view === false) {
+        if (!email) return res.status(400).json({ "message": "You don't have access to view this note" })
+        if (!emailMatch(req, email)) {
+            return res.status(401).json({ message: "authentication error" })
+        }
+    }
+    if (email != note.email && !note.access.includes(email)) return res.status(400).json({ "message": "You don't have access to view this note" })
     res.status(200).json({ "note": note })
 })
 app.get("/note-random-id", async (req, res) => {
@@ -120,22 +159,32 @@ app.get("/note-random-id", async (req, res) => {
 })
 
 app.post("/updatenote", async (req, res) => {
-    const query = req.query
-    const body = req.body
-    if (!query.id) {
+    const { id } = req.query
+    let { note, email } = req.body
+    email = email ? email.toLowerCase() : null
+    if (!id) {
         return res.status(400).json({ message: "id query is required" })
     }
-    if (!body.note) {
+    if (!note) {
         return res.status(400).json({ message: "note is required" })
     }
+
+    const existing = await noteModel.findOne({ id: id })
+    if (existing.edit === false) {
+        if (!emailMatch(req, email)) {
+            return res.status(401).json({ message: "authentication error" })
+        }
+    }
+    if (email != existing.email && !existing.access.includes(email)) return res.status(400).json({ "message": "You don't have access to edit this note" })
+
     try {
         let result = await noteModel.updateOne(
-            { id: query.id },
-            { $set: { note: body.note } }
+            { id: id },
+            { $set: { note: note } }
         )
     }
     catch (error) {
-        res.status(500).json({ "message": "some error occured during updaing database" })
+        return res.status(500).json({ "message": "some error occured during updaing database" })
     }
 
     res.status(200).json({ "message": "updated database successfully" })
