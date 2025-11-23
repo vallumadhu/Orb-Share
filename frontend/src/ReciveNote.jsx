@@ -3,7 +3,10 @@ import { Link, useParams } from "react-router-dom"
 import { AppContext } from "./App"
 
 export default function ReciveNote() {
-    const { setalert } = useContext(AppContext)
+    const { setalert, email } = useContext(AppContext)
+    const [access, setAccess] = useState([]);
+    const [edit, setedit] = useState(true);
+    const [view, setview] = useState(true);
     const textAreaRef = useRef()
 
     const heightHandle = () => {
@@ -23,14 +26,20 @@ export default function ReciveNote() {
             setalert("Give your note a name", "bad")
             return
         }
+        const token = localStorage.getItem("token")
         try {
             const res = await fetch(`https://nano-path.onrender.com/updatenote?id=${id}`, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": token
                 },
                 method: "post",
                 body: JSON.stringify({
-                    note: note
+                    note: note,
+                    view: view,
+                    edit: edit,
+                    access: access,
+                    email: email
                 })
             })
             if (res.status == 200) {
@@ -45,20 +54,35 @@ export default function ReciveNote() {
 
     useEffect(() => {
         async function fetchNote() {
+            const token = localStorage.getItem("token")
             try {
-                const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`);
+                const res = await fetch(`https://nano-path.onrender.com/fetchnote?id=${id}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token
+                    },
+                    method: "post",
+                    body: JSON.stringify({
+                        email: email
+                    })
+                });
                 const data = await res.json();
                 setnote(data.note.note)
             } catch (e) {
-                setalert("No Note Found", "bad");
+                setalert(e.message, "bad");
                 try {
                     const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`, {
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": token
                         },
                         method: "post",
                         body: JSON.stringify({
-                            note: " "
+                            note: " ",
+                            view: view,
+                            edit: edit,
+                            access: access,
+                            email: email
                         })
                     })
                     if (res.status == 200) {
@@ -86,17 +110,16 @@ export default function ReciveNote() {
                 <div className="protectionBox">
                     <div className="option">
                         <label>Allow others to view:</label>
-                        <select>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select onChange={(e) => setview(e.target.value === "true")} value={view}>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
-
                     <div className="option">
                         <label>Allow others to edit:</label>
-                        <select>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select onChange={(e) => setedit(e.target.value === "true")} value={edit ? "true" : "false"} >
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
 
@@ -105,6 +128,7 @@ export default function ReciveNote() {
                         <input
                             type="text"
                             placeholder="Enter email (comma-separated)"
+                            onChange={(e) => setAccess(e.target.value.split(",").map((email) => email.trim().toLowerCase()).filter(email => email.length > 0))}
                         />
                     </div>
                     <div className="protectionOverlay">

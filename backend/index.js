@@ -96,7 +96,8 @@ const User = mongoose.model("User", userSchema);
 const noteModel = mongoose.model("noteModel", noteSchema)
 
 app.use(cors({
-    origin: ["https://nanopath.netlify.app", "http://localhost:5173", "https://orbshare.netlify.app"],
+    // origin: ["https://nanopath.netlify.app", "http://localhost:5173", "https://orbshare.netlify.app"],
+    origin: "*",
     methods: ["GET", "POST"],
 }));
 
@@ -127,7 +128,7 @@ app.post("/note", async (req, res) => {
     return res.status(200).json(newNode)
 })
 
-app.get("/note", async (req, res) => {
+app.post("/fetchnote", async (req, res) => {
     const query = req.query
     let { email = null } = req.body
     email = email ? email.toLowerCase() : null

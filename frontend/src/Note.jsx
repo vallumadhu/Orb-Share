@@ -5,6 +5,10 @@ import { AppContext } from "./App"
 export default function Note() {
     const navigate = useNavigate()
     const { setalert, email } = useContext(AppContext)
+    const [access, setAccess] = useState([]);
+    const [edit, setedit] = useState(true);
+    const [view, setview] = useState(true);
+
     const textAreaRef = useRef()
 
     const [note, setnote] = useState("")
@@ -30,14 +34,20 @@ export default function Note() {
             setalert("Give your note a name", "bad")
             return
         }
+        const token = localStorage.getItem("token")
         try {
             const res = await fetch(`https://nano-path.onrender.com/note?id=${noteid}`, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": token
                 },
                 method: "post",
                 body: JSON.stringify({
-                    note: note
+                    note: note,
+                    view: view,
+                    edit: edit,
+                    access: access,
+                    email: email
                 })
             })
             if (res.status == 200) {
@@ -63,17 +73,16 @@ export default function Note() {
             <div className="protectionBox">
                 <div className="option">
                     <label>Allow others to view:</label>
-                    <select>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
+                    <select onChange={(e) => setview(e.target.value === "true")} value={view}>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
                 </div>
-
                 <div className="option">
                     <label>Allow others to edit:</label>
-                    <select>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
+                    <select onChange={(e) => setedit(e.target.value === "true")} value={edit ? "true" : "false"} >
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
                     </select>
                 </div>
 
@@ -82,6 +91,7 @@ export default function Note() {
                     <input
                         type="text"
                         placeholder="Enter email (comma-separated)"
+                        onChange={(e) => setAccess(e.target.value.split(",").map((email) => email.trim().toLowerCase()).filter(email => email.length > 0))}
                     />
                 </div>
                 {!email && <div className="protectionOverlay">
