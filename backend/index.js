@@ -160,7 +160,7 @@ app.get("/note-random-id", async (req, res) => {
 
 app.post("/updatenote", async (req, res) => {
     const { id } = req.query
-    let { note, email } = req.body
+    let { note, view = false, edit = false, access = [], email = null } = req.body
     email = email ? email.toLowerCase() : null
     if (!id) {
         return res.status(400).json({ message: "id query is required" })
@@ -180,7 +180,7 @@ app.post("/updatenote", async (req, res) => {
     try {
         let result = await noteModel.updateOne(
             { id: id },
-            { $set: { note: note } }
+            { $set: { note: note, access: access, view: view, edit: edit } }
         )
     }
     catch (error) {

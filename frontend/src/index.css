@@ -364,6 +364,7 @@ body::-webkit-scrollbar-thumb {
     user-select: none;
     box-shadow: 0 0 0 black;
 }
+
 .loginBox:hover {
     background: none;
     box-shadow: 0 0 0 black;
@@ -818,7 +819,8 @@ input {
         display: none;
     }
 
-    .menu-btn,.loginBox {
+    .menu-btn,
+    .loginBox {
         display: block;
     }
 
