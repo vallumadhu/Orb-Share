@@ -1,5 +1,5 @@
 import { useRef, useEffect, useContext } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { AppContext } from "./App"
 
@@ -102,7 +102,7 @@ export default function Login() {
                         <input {...register("email", { required: "Email is required" })} type="email" placeholder="name@example.com" />
                         <input {...register("password", { required: "Password is required", minLength: { value: 8, message: "Password must be at least 8 characters" } })} type="password" placeholder="Password" />
                     </div>
-                    <p>New User <a href="">Register</a></p>
+                    <p>New User <Link to={"/register"}>Register</Link></p>
                     <button type="sumbit" className="loginBtn" style={{ backgroundColor: isSubmitting ? "#35008055" : "#4a1ac6" }} disabled={isSubmitting}>LogIn</button>
                 </form>
             </div>

@@ -29,21 +29,6 @@ function App() {
       setalertmessages(prev => prev.filter(msg => msg.id !== id));
     }, 2800)
   }
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (token) {
-      fetch("https://nano-path.onrender.com/email", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": token
-        }
-      }).then((res) => res.json())
-        .then((data) => {
-          setemail(() => data.email)
-        })
-    }
-
-  }, [])
   return (
     <>
       <AppContext.Provider value={{ copytoclipboard, setalert, setemail, email }}>

@@ -96,7 +96,7 @@ const User = mongoose.model("User", userSchema);
 const noteModel = mongoose.model("noteModel", noteSchema)
 
 app.use(cors({
-    origin: ["https://nanopath.netlify.app", "http://localhost:5173", "https://orbshare.netlify.app"],
+    origin: ["https://nanopath.netlify.app", "https://orbshare.netlify.app"],
     methods: ["GET", "POST"],
 }));
 
@@ -231,14 +231,12 @@ app.post("/register", async (req, res) => {
 
     newUser.save()
         .then(user => {
-            console.log("Registered successfully:", user)
-            res.status(201).redirect("http://http://localhost:5173/login")
+            return res.status(200).json({ message: "registered" })
         })
         .catch(error => {
             console.error("Failed to register:", error.message)
-            res.status(400).json({ message: error.message })
+            return res.status(400).json({ message: error.message })
         })
-    res.status(200).json({ message: "registered" })
 })
 
 app.get("/email", authenticate, (req, res) => {

@@ -9,6 +9,7 @@ import About from './About.jsx'
 import FilePage from './FilePage.jsx'
 import ReciveNote from './ReciveNote.jsx'
 import NoteIdInputPage from './NoteIdInputPage.jsx'
+import Register from './Register.jsx'
 import Note from './Note.jsx'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')).render(
         </Route>
         <Route path="about" element={<About />} />
         <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
       </Route>
     </Routes>
   </BrowserRouter>,
