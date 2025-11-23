@@ -84,7 +84,7 @@ const urlModel = mongoose.model("urlModel", urlSchema)
 const noteModel = mongoose.model("noteModel", noteSchema)
 
 app.use(cors({
-    origin: ["https://nanopath.netlify.app"],
+    origin: ["https://nanopath.netlify.app", "http://localhost:5173/"],
     methods: ["GET", "POST"],
 }));
 

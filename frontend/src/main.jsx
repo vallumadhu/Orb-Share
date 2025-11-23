@@ -6,25 +6,23 @@ import App from './App.jsx'
 import Home from './Home.jsx'
 import Login from './login.jsx'
 import About from './About.jsx'
-import InputBox from './InputBox.jsx'
-import CustomInputBox from './CustomInputBox.jsx'
+import FilePage from './FilePage.jsx'
 import ReciveNote from './ReciveNote.jsx'
 import NoteIdInputPage from './NoteIdInputPage.jsx'
 import Note from './Note.jsx'
 createRoot(document.getElementById('root')).render(
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<App />}>
-          <Route path='' element={<Home />} >
-            <Route path='' element={<InputBox />} />
-            <Route path='custom-id' element={<CustomInputBox />} />
-            <Route path='send-note' element={<Note />} />
-            <Route path='note' element={<NoteIdInputPage />} />
-            <Route path='note/:id' element={<ReciveNote />} />
-          </Route>
-          <Route path="about" element={<About />} />
-          <Route path="login" element={<Login />} />
+  <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<App />}>
+        <Route path='' element={<Home />} >
+          <Route path='' element={<Note />} />
+          <Route path='note' element={<NoteIdInputPage />} />
+          <Route path='note/:id' element={<ReciveNote />} />
+          <Route path='file' element={<FilePage />} />
         </Route>
-      </Routes>
-    </BrowserRouter>,
+        <Route path="about" element={<About />} />
+        <Route path="login" element={<Login />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>,
 )

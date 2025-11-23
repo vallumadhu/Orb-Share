@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState,useContext } from "react"
+import { useEffect, useRef, useState, useContext } from "react"
 import { Link, useParams } from "react-router-dom"
 import { AppContext } from "./App"
 
@@ -24,7 +24,7 @@ export default function ReciveNote() {
             return
         }
         try {
-            const res = await fetch(`http://localhost:3000/updatenote?id=${id}`, {
+            const res = await fetch(`https://nano-path.onrender.com/updatenote?id=${id}`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -46,13 +46,13 @@ export default function ReciveNote() {
     useEffect(() => {
         async function fetchNote() {
             try {
-                const res = await fetch(`http://localhost:3000/note?id=${id}`);
+                const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`);
                 const data = await res.json();
                 setnote(data.note.note)
             } catch (e) {
                 setalert("No Note Found", "bad");
                 try {
-                    const res = await fetch(`http://localhost:3000/note?id=${id}`, {
+                    const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`, {
                         headers: {
                             "Content-Type": "application/json"
                         },

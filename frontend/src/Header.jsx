@@ -9,7 +9,7 @@ export default function Header() {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        fetch("http://localhost:3000/email", {
+        fetch("https://nano-path.onrender.com/email", {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": token
@@ -40,20 +40,22 @@ export default function Header() {
         <header className="header">
             <nav className="nav">
                 <div className="nav-left">
-                    <Link to="/send-note" className="nav-link"><p>Send Note</p></Link>
-                    <Link to="/note" className="nav-link"><p>Note</p></Link>
-
+                    <Link to="/" className="nav-link"><p>Home</p></Link>
+                    <Link to="/note" className="nav-link"><p>Open Note</p></Link>
                 </div>
 
                 <div className="nav-center">
                     <Link to="/" className="brand">
-                        <h1 className="title">Nano Path</h1>
+                        <h1 className="title">Orb Share</h1>
                     </Link>
-                    <p className="subtitle">Share Anything with one simple link</p>
+                    <p className="subtitle">Share Anything You Want</p>
                 </div>
 
                 <div className="nav-right">
-                    <Link to="/custom-id" className="nav-link"><p>Custom ID</p></Link>
+                    <Link to="/file" className="nav-link"><p>Share File</p></Link>
+                    <Link to="/about" className="nav-link"><p>About</p></Link>
+
+
                     {email ? <div className="profileiconBox"> <div className="profileicon" onClick={() => setShowLogout(prev => !prev)}><p>{email[0]}</p> </div> {showLogout && <div className="logoutBox"><button onClick={logoutHandler}>Log Out</button></div>}</div> : <Link to="/login">
                         <button className="login-btn">Login</button>
                     </Link>}
@@ -66,9 +68,9 @@ export default function Header() {
             <div className={`sideBar ${showMenu ? "sideBarshow" : "sideBarhide"}`}>
                 <nav>
                     <Link to="" className="nav-link" onClick={() => setShowMenu(false)}><p>Home</p></Link>
-                    <Link to="/note" className="nav-link" onClick={() => setShowMenu(false)}><p>Note</p></Link>
-                    <Link to="/send-note" className="nav-link" onClick={() => setShowMenu(false)} ><p>Send Note</p></Link>
-                    <Link to="/custom-id" className="nav-link" onClick={() => setShowMenu(false)}><p>Custom ID</p></Link>
+                    <Link to="/note" className="nav-link" onClick={() => setShowMenu(false)}><p>Open Note</p></Link>
+                    <Link to="/file" className="nav-link" onClick={() => setShowMenu(false)} ><p>Share File</p></Link>
+                    <Link to="/About" className="nav-link" onClick={() => setShowMenu(false)}><p>About</p></Link>
                 </nav>
             </div>
         </header>

@@ -319,8 +319,7 @@ button:hover {
     flex-direction: column;
     gap: 12px;
     z-index: 9999;
-    max-width: 200px;
-    width: 90%;
+    max-width: 90%;
 }
 
 .alert-message {
@@ -375,17 +374,20 @@ button:hover {
     overflow-y: scroll;
 }
 
-.text-box textarea::-webkit-scrollbar {
+.text-box textarea::-webkit-scrollbar,
+body::-webkit-scrollbar {
     width: 5px;
     height: 100%;
 }
 
-.text-box textarea::-webkit-scrollbar-track {
+.text-box textarea::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 50px;
 }
 
-.text-box textarea::-webkit-scrollbar-thumb {
+.text-box textarea::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
     background: white;
     border-radius: 999px;
     border: 2px solid transparent;
@@ -402,7 +404,7 @@ button:hover {
 }
 
 .protectionBox {
-    margin-top: 80px;
+    margin-top: 40px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -651,6 +653,69 @@ input {
     box-shadow: 0 0 5px rgba(255, 126, 126, 0.819);
 }
 
+/*About Page*/
+.about-faq {
+    width: 90%;
+    max-width: 900px;
+    margin: 50px auto;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.faq-item {
+    background: #161616;
+    border: 1px solid rgba(178, 140, 255, 0.15);
+    border-radius: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 0 12px rgba(98, 56, 255, 0.1);
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.faq-question span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #b28cff;
+    transition: transform 0.5s ease;
+}
+
+.faq-item.open .faq-question span {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    margin-top: 12px;
+    transition: all 0.35s ease;
+    color: #c8c8c8;
+    line-height: 1.6rem;
+    font-size: 0.95rem;
+}
+
+.faq-answer ul {
+    padding-left: 20px;
+}
+
+.faq-answer li {
+    margin-bottom: 6px;
+}
 
 @keyframes fadeOut {
     to {

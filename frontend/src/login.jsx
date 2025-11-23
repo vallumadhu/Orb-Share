@@ -7,7 +7,7 @@ export default function Login() {
     const { setalert, setemail } = useContext(AppContext)
     const ballRef = useRef()
     const getEmail = (token) => {
-        fetch("http://localhost:3000/email", {
+        fetch("https://nano-path.onrender.com/email", {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": token
@@ -43,7 +43,7 @@ export default function Login() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("https://nano-path.onrender.com/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

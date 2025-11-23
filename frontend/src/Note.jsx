@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, useContext } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AppContext } from "./App"
 
 export default function Note() {
+    const navigate = useNavigate()
     const { setalert, email } = useContext(AppContext)
     const textAreaRef = useRef()
 
@@ -11,7 +12,7 @@ export default function Note() {
 
     const getRandomnoteid = async () => {
         try {
-            const res = await fetch("http://localhost:3000/note-random-id")
+            const res = await fetch("https://nano-path.onrender.com/note-random-id")
             const message = await res.json()
             setnoteid(message.id)
         } catch (e) {
@@ -30,7 +31,7 @@ export default function Note() {
             return
         }
         try {
-            const res = await fetch(`http://localhost:3000/note?id=${noteid}`, {
+            const res = await fetch(`https://nano-path.onrender.com/note?id=${noteid}`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -41,6 +42,7 @@ export default function Note() {
             })
             if (res.status == 200) {
                 setalert("Saved Successfully!", "good")
+                navigate(`/note/${noteid}`)
             }
 
         } catch (e) {
