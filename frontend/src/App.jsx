@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (token) {
-      fetch("http://localhost:3000/email", {
+      fetch("https://nano-path.onrender.com/email", {
         headers: {
           "Content-Type": "application/json",
           "Authorization": token

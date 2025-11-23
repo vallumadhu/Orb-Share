@@ -30,7 +30,7 @@ export default function ReciveNote() {
         }
         const token = localStorage.getItem("token")
         try {
-            const res = await fetch(`http://localhost:3000/updatenote?id=${id}`, {
+            const res = await fetch(`https://nano-path.onrender.com/updatenote?id=${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": token
@@ -59,7 +59,7 @@ export default function ReciveNote() {
         async function fetchNote() {
             const token = localStorage.getItem("token")
             try {
-                const res = await fetch(`http://localhost:3000/fetchnote?id=${id}`, {
+                const res = await fetch(`https://nano-path.onrender.com/fetchnote?id=${id}`, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": token
@@ -80,7 +80,7 @@ export default function ReciveNote() {
             } catch (e) {
                 setalert(e.message, "bad");
                 try {
-                    const res = await fetch(`http://localhost:3000/note?id=${id}`, {
+                    const res = await fetch(`https://nano-path.onrender.com/note?id=${id}`, {
                         headers: {
                             "Content-Type": "application/json",
                             "Authorization": token
