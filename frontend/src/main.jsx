@@ -12,19 +12,19 @@ import ReciveNote from './ReciveNote.jsx'
 import NoteIdInputPage from './NoteIdInputPage.jsx'
 import Note from './Note.jsx'
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<App />}>
-        <Route path='' element={<Home />} >
-          <Route path='' element={<InputBox />} />
-          <Route path='custom-id' element={<CustomInputBox />} />
-          <Route path='send-note' element={<Note />} />
-          <Route path='note' element={<NoteIdInputPage />} />
-          <Route path='note/:id' element={<ReciveNote />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<App />}>
+          <Route path='' element={<Home />} >
+            <Route path='' element={<InputBox />} />
+            <Route path='custom-id' element={<CustomInputBox />} />
+            <Route path='send-note' element={<Note />} />
+            <Route path='note' element={<NoteIdInputPage />} />
+            <Route path='note/:id' element={<ReciveNote />} />
+          </Route>
+          <Route path="about" element={<About />} />
+          <Route path="login" element={<Login />} />
         </Route>
-        <Route path="about" element={<About />} />
-        <Route path="login" element={<Login />} />
-      </Route>
-    </Routes>
-  </BrowserRouter>,
+      </Routes>
+    </BrowserRouter>,
 )

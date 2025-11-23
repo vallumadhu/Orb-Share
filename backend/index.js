@@ -4,10 +4,26 @@ const randomWords = require('random-words')
 const crypto = require("crypto")
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3000
 
 
 const app = express()
+
+const authenticate = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ message: "Token is not valid" });
+    }
+};
 
 mongoose.connect(process.env.ATLAS_URL)
     .then(() => console.log("Mongodb connected"))
@@ -45,6 +61,25 @@ const noteSchema = mongoose.Schema(
     }
 )
 
+const userSchema = new mongoose.Schema(
+    {
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+        password: {
+            type: String,
+            required: true,
+            minlength: 6
+        }
+    },
+    { timestamps: true }
+);
+
+const User = mongoose.model("User", userSchema);
 const urlModel = mongoose.model("urlModel", urlSchema)
 const noteModel = mongoose.model("noteModel", noteSchema)
 
@@ -179,6 +214,71 @@ app.post("/updatenote", async (req, res) => {
     }
 
     res.status(200).json({ "message": "updated database successfully" })
+})
+
+app.post("/login", async (req, res) => {
+    console.log("Login endpoint hit, body:", req.body);
+    const body = req.body
+    if (!body.email || !body.password) {
+        return res.status(400).json({ message: "Email and password required" })
+    }
+
+    const email = body.email
+
+    const user = await User.findOne({ email })
+    if (!user) {
+        return res.status(404).json({ message: "User not found" })
+    }
+
+    if (user.password != body.password) {
+        return res.status(400).json({ message: "Invaild Password" })
+    }
+
+    const token = jwt.sign(
+        { userId: user.email },
+        process.env.JWT_SECRET
+    )
+    res.setHeader("Authorization", `Bearer ${token}`);
+    res.setHeader("Access-Control-Expose-Headers", "Authorization");
+    res.status(200).json({
+        message: "Login successful",
+        user: {
+            email: user.email,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        }
+    });
+})
+
+app.post("/register", async (req, res) => {
+    const body = req.body
+    if (!body.email || !body.password) {
+        return res.status(400).json({ message: "Email and password required" })
+    }
+
+    const newUser = new User({
+        email: body.email,
+        password: body.password
+    })
+
+    newUser.save()
+        .then(user => {
+            console.log("Registered successfully:", user)
+            res.status(201).redirect("http://http://localhost:5173/login")
+        })
+        .catch(error => {
+            console.error("Failed to register:", error.message)
+            res.status(400).json({ message: error.message })
+        })
+})
+
+app.get("/email", authenticate, (req, res) => {
+    if (req.user) {
+        console.log(req.user)
+        res.status(200).json({ "email": req.user })
+    } else {
+        res.status(404).json({ "message": "User Not Found" })
+    }
 })
 
 app.get("/health", (req, res) => {

@@ -3,10 +3,14 @@ import Header from "./Header";
 import AlertBox from "./alertBox";
 import Home from "./Home";
 import { Outlet } from "react-router-dom";
+import { createContext } from "react";
 
+
+const AppContext = createContext()
 function App() {
   const [nanopath, setnanopath] = useState("")
   const [alertmessages, setalertmessages] = useState([])
+  const [email, setemail] = useState("")
   const copytoclipboard = () => {
     navigator.clipboard.writeText(nanopath)
       .then(() => {
@@ -26,16 +30,18 @@ function App() {
       setalertmessages(prev => prev.filter(msg => msg.id !== id));
     }, 2800)
   }
-
   return (
     <>
-      <Header />
-      <main className="main">
-        <Outlet context={{ nanopath, setnanopath, copytoclipboard, setalert }} />
-        <AlertBox alertmessages={alertmessages} />
-      </main>
+      <AppContext.Provider value={{ nanopath, setnanopath, copytoclipboard, setalert, setemail, email }}>
+        <Header />
+        <main className="main">
+          <Outlet />
+          <AlertBox alertmessages={alertmessages} />
+        </main>
+      </AppContext.Provider>
     </>
   )
 }
 
 export default App
+export { AppContext }

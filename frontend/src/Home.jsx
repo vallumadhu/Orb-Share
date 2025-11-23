@@ -1,15 +1,19 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import QRCode from "react-qr-code";
 import InputBox from "./InputBox";
 import CustomInputBox from "./CustomInputBox"
-import { useOutletContext, Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { useContext, createContext } from "react"
+import { AppContext } from "./App";
+
+const HomeContext = createContext()
 
 export default function Home() {
-    const { nanopath, setnanopath, copytoclipboard, setalert } = useOutletContext()
+    const { nanopath, setnanopath, copytoclipboard, setalert } = useContext(AppContext)
     const [url, seturl] = useState("")
     const [customid, setcustomid] = useState("")
     const [ishandling, setishandling] = useState(false)
-
+    const location = useLocation()
     const handleapi = async () => {
         if (!url.trim() || url.includes(" ")) {
             setalert("Enter URL")
@@ -17,7 +21,7 @@ export default function Home() {
         }
         setishandling(true);
         try {
-            const response = await fetch(`https://nano-path.onrender.com/url?url=${url}`, {
+            const response = await fetch(`http://localhost:3000/url?url=${url}`, {
                 method: "POST",
             });
             if (response.status != 200) {
@@ -26,7 +30,7 @@ export default function Home() {
                 return
             }
             const data = await response.json();
-            setnanopath(`https://nano-path.onrender.com/url?id=${data.id}`);
+            setnanopath(`http://localhost:3000/url?id=${data.id}`);
             console.log(data);
         } catch (e) {
             console.error(e);
@@ -46,7 +50,7 @@ export default function Home() {
         }
         setishandling(true);
         try {
-            const response = await fetch(`https://nano-path.onrender.com/custom?url=${url}&id=${customid}`, {
+            const response = await fetch(`http://localhost:3000/custom?url=${url}&id=${customid}`, {
                 method: "POST",
             });
             if (response.status != 200) {
@@ -55,7 +59,7 @@ export default function Home() {
                 return
             }
             const data = await response.json();
-            setnanopath(`https://nano-path.onrender.com/url?id=${data.id}`);
+            setnanopath(`http://localhost:3000/url?id=${data.id}`);
             console.log(data);
         } catch (e) {
             console.error(e);
@@ -63,12 +67,10 @@ export default function Home() {
             setishandling(false);
         }
     }
-
-
     return (
-        <>
-            <Outlet context={{ ishandling, seturl, setcustomid, customidhandleapi, handleapi,setalert }} />
-            {nanopath && (
+        <> <HomeContext.Provider value={{ ishandling, seturl, setcustomid, customidhandleapi, handleapi }}>
+            <Outlet />
+            {nanopath && (location.pathname === "/" || location.pathname === "/custom-id") && (
                 <div className="result-box">
                     <div className="result-container">
                         <p className="result-link">
@@ -85,7 +87,7 @@ export default function Home() {
                     </button>
                 </div>
             )}
-            {nanopath && <div className="qrBox">
+            {nanopath && (location.pathname === "/" || location.pathname === "/custom-id") && <div className="qrBox">
                 <QRCode
                     size={256}
                     style={{ height: "auto", maxWidth: "100%", width: "100%" }}
@@ -93,6 +95,9 @@ export default function Home() {
                     viewBox={`0 0 256 256`}
                 />
             </div>}
+        </HomeContext.Provider>
         </>
     )
 }
+
+export {HomeContext}

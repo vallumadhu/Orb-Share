@@ -1,7 +1,9 @@
-import { useOutletContext } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { useContext } from "react"
+import { AppContext } from "./App";
+import { HomeContext } from "./Home";
 export default function CustomInputBox() {
-    const { seturl, ishandling, setcustomid, customidhandleapi } = useOutletContext()
+    const { customidhandleapi, ishandling, seturl, setcustomid } = useContext(HomeContext)
     const idInput = useRef()
     const urlInput = useRef()
     useEffect(() => {

@@ -1,6 +1,8 @@
-import { useOutletContext } from "react-router-dom"
+import { useContext } from "react"
+import { AppContext } from "./App";
+import { HomeContext } from "./Home";
 export default function InputBox() {
-    const { handleapi, seturl, ishandling } = useOutletContext()
+    const { handleapi, ishandling, seturl } = useContext(HomeContext)
     return (
         <div className="input-container">
             <input

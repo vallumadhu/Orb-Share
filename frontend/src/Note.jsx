@@ -1,21 +1,17 @@
-import { useRef, useState } from "react"
-import { Link, useOutletContext } from "react-router-dom"
+import { useEffect, useRef, useState, useContext } from "react"
+import { Link } from "react-router-dom"
+import { AppContext } from "./App"
 
 export default function Note() {
-    const { setalert } = useOutletContext()
+    const { setalert, email } = useContext(AppContext)
     const textAreaRef = useRef()
-
-    const heightHandle = () => {
-        textAreaRef.current.style.height = "auto"
-        textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px"
-    }
 
     const [note, setnote] = useState("")
     const [noteid, setnoteid] = useState("")
 
     const getRandomnoteid = async () => {
         try {
-            const res = await fetch("https://nano-path.onrender.com/note-random-id")
+            const res = await fetch("http://localhost:3000/note-random-id")
             const message = await res.json()
             setnoteid(message.id)
         } catch (e) {
@@ -34,7 +30,7 @@ export default function Note() {
             return
         }
         try {
-            const res = await fetch(`https://nano-path.onrender.com/note?id=${noteid}`, {
+            const res = await fetch(`http://localhost:3000/note?id=${noteid}`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -55,7 +51,7 @@ export default function Note() {
 
     return (<section className="note-section">
         <div className="text-box">
-            <textarea name="" id="" ref={textAreaRef} onInput={heightHandle} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done."></textarea>
+            <textarea name="" id="" ref={textAreaRef} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done."></textarea>
         </div>
         <div className="note-controls">
             <div className="note-id-controls">
@@ -86,12 +82,13 @@ export default function Note() {
                         placeholder="Enter email (comma-separated)"
                     />
                 </div>
-                <div className="protectionOverlay">
+                {!email && <div className="protectionOverlay">
                     <p>Login to Access</p>
                     <Link to="/login">
                         <button className="login-btn">Login</button>
                     </Link>
-                </div>
+                </div>}
+
             </div>
             <button className="save-btn" onClick={postNote}>Save</button>
         </div>

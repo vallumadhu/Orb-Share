@@ -1,7 +1,8 @@
-import { useState } from "react"
-import { Link, useNavigate, useOutletContext } from "react-router-dom"
+import { useState, useContext } from "react"
+import { useNavigate, useOutletContext } from "react-router-dom"
+import { AppContext } from "./App"
 export default function NoteIdInputPage() {
-    const { setalert } = useOutletContext()
+    const { setalert } = useContext(AppContext)
     const [noteid, setnoteid] = useState("")
     const navigate = useNavigate()
     const handlenavigate = () => {
