@@ -14,7 +14,7 @@ export default function NoteIdInputPage() {
     return (
         <div>
             <div className="input-container">
-                <input type="text" placeholder="Enter note name" className="url-input" onChange={(e) => setnoteid(e.target.value)} value={noteid} onKeyUp={(e) => {
+                <input type="text" placeholder="Enter note name" className="url-input" onChange={(e) => setnoteid(e.target.value.toLowerCase())} value={noteid} onKeyUp={(e) => {
                     if (e.key === "Enter") {
                         handlenavigate()
                     }

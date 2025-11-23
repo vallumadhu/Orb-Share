@@ -32,6 +32,7 @@ main {
     min-height: 50vh;
 }
 
+/*Header Styles*/
 .header {
     width: 100%;
 }
@@ -164,6 +165,7 @@ main {
     color: white;
     cursor: pointer;
     user-select: none;
+    box-shadow: 0 0 0 black;
 }
 
 .menu-btn:hover {
@@ -232,17 +234,6 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.custom-input-container .url-input {
-    margin: 15px;
-}
-
-
 button {
     background: linear-gradient(135deg, #4a1ac6, #6238ff);
     color: #fff;
@@ -262,54 +253,7 @@ button:hover {
     transform: translateY(-3px) scale(1.03);
 }
 
-.result-box {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
-
-.result-box button {
-    padding: 5px;
-    height: 50px;
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.result-box button svg {
-    width: 100%;
-}
-
-.result-container {
-    background: linear-gradient(145deg, #101010, #161616);
-    padding: 18px 24px;
-    border-radius: 14px;
-    box-shadow: 0 0 25px rgba(98, 56, 255, 0.15);
-    animation: fadeInUp 0.6s ease;
-    text-align: center;
-    border: 1px solid rgba(178, 140, 255, 0.1);
-}
-
-.result-link a {
-    color: #b28cff;
-    text-decoration: none;
-    font-weight: 500;
-    word-break: break-all;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.result-link a:hover {
-    color: #fff;
-    text-shadow: 0 0 12px rgba(178, 140, 255, 0.6);
-}
-
-.qrBox {
-    background-color: #1a1a1a;
-    padding: 10px;
-    border-radius: 10px;
-}
-
+/*Alerts*/
 .alert-box {
     position: fixed;
     bottom: 20px;
@@ -342,6 +286,7 @@ button:hover {
     background-color: #b8343c;
 }
 
+/*Note Page*/
 .note-section {
     width: 100%;
     display: flex;
@@ -403,8 +348,30 @@ body::-webkit-scrollbar-thumb {
     align-items: center;
 }
 
+.notelabel {
+    margin-top: 20px;
+}
+
+.loginBox {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    font-size: 1.6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 0 black;
+}
+.loginBox:hover {
+    background: none;
+    box-shadow: 0 0 0 black;
+    transform: translateY(0px) scale(1);
+}
+
 .protectionBox {
-    margin-top: 40px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -469,6 +436,8 @@ input {
     padding: 10px 25px;
     margin: 20px auto;
 }
+
+/*Login Page*/
 
 .LoginPage {
     width: 100%;
@@ -717,6 +686,7 @@ input {
     margin-bottom: 6px;
 }
 
+/*Animations */
 @keyframes fadeOut {
     to {
         opacity: 0;
@@ -784,6 +754,21 @@ input {
     }
 }
 
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/*Responsive Design Code*/
 @media (max-width: 900px) {
     .header .nav-center {
         width: 40%;
@@ -833,7 +818,7 @@ input {
         display: none;
     }
 
-    .menu-btn {
+    .menu-btn,.loginBox {
         display: block;
     }
 
@@ -873,19 +858,5 @@ input {
 
     .result-container {
         max-width: 98%;
-    }
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
     }
 }

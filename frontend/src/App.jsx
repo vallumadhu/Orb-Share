@@ -8,7 +8,6 @@ import { createContext } from "react";
 
 const AppContext = createContext()
 function App() {
-  const [nanopath, setnanopath] = useState("")
   const [alertmessages, setalertmessages] = useState([])
   const [email, setemail] = useState("")
   const copytoclipboard = () => {
@@ -32,7 +31,7 @@ function App() {
   }
   return (
     <>
-      <AppContext.Provider value={{ nanopath, setnanopath, copytoclipboard, setalert, setemail, email }}>
+      <AppContext.Provider value={{ copytoclipboard, setalert, setemail, email }}>
         <Header />
         <main className="main">
           <Outlet />

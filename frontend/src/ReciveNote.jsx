@@ -76,43 +76,45 @@ export default function ReciveNote() {
     }, []);
 
 
-    return (<section className="note-section">
-        <div className="text-box">
-            <textarea name="" id="" ref={textAreaRef} onInput={heightHandle} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done." value={note}></textarea>
-        </div>
-        <div className="note-controls">
-            <div className="protectionBox">
-                <div className="option">
-                    <label>Allow others to view:</label>
-                    <select>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-
-                <div className="option">
-                    <label>Allow others to edit:</label>
-                    <select>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-
-                <div className="option">
-                    <label>Give permission to specific users:</label>
-                    <input
-                        type="text"
-                        placeholder="Enter email (comma-separated)"
-                    />
-                </div>
-                <div className="protectionOverlay">
-                    <p>Login to Access</p>
-                    <Link to="/login">
-                        <button className="login-btn">Login</button>
-                    </Link>
-                </div>
+    return (<>
+        <section className="note-section">
+            <div className="text-box">
+                <textarea name="" id="" ref={textAreaRef} onInput={heightHandle} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done." value={note}></textarea>
             </div>
-            <button className="save-btn" onClick={postNote}>Save</button>
-        </div>
-    </section>)
+            <div className="note-controls">
+                <p className="notelabel">Note Name: {id}</p>
+                <div className="protectionBox">
+                    <div className="option">
+                        <label>Allow others to view:</label>
+                        <select>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div className="option">
+                        <label>Allow others to edit:</label>
+                        <select>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div className="option">
+                        <label>Give permission to specific users:</label>
+                        <input
+                            type="text"
+                            placeholder="Enter email (comma-separated)"
+                        />
+                    </div>
+                    <div className="protectionOverlay">
+                        <p>Login to Access</p>
+                        <Link to="/login">
+                            <button className="login-btn">Login</button>
+                        </Link>
+                    </div>
+                </div>
+                <button className="save-btn" onClick={postNote}>Save</button>
+            </div>
+        </section></>)
 }

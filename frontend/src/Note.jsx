@@ -14,7 +14,7 @@ export default function Note() {
         try {
             const res = await fetch("https://nano-path.onrender.com/note-random-id")
             const message = await res.json()
-            setnoteid(message.id)
+            setnoteid(message.id.toLowerCase())
         } catch (e) {
             console.error(e)
             setalert("Something went wrong!", "bad")
@@ -57,7 +57,7 @@ export default function Note() {
         </div>
         <div className="note-controls">
             <div className="note-id-controls">
-                <input type="text" placeholder="Enter note name" className="note-name" onChange={(e) => setnoteid(e.target.value)} value={noteid} />
+                <input type="text" placeholder="Enter note name" className="note-name" onChange={(e) => setnoteid(e.target.value.toLowerCase())} value={noteid} />
                 <button onClick={getRandomnoteid}>Randomize</button>
             </div>
             <div className="protectionBox">

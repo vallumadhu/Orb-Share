@@ -48,14 +48,12 @@ export default function Header() {
                     <Link to="/" className="brand">
                         <h1 className="title">Orb Share</h1>
                     </Link>
-                    <p className="subtitle">Share Anything You Want</p>
+                    <p className="subtitle">Seamless Sharing Zero Hassle</p>
                 </div>
 
                 <div className="nav-right">
                     <Link to="/file" className="nav-link"><p>Share File</p></Link>
                     <Link to="/about" className="nav-link"><p>About</p></Link>
-
-
                     {email ? <div className="profileiconBox"> <div className="profileicon" onClick={() => setShowLogout(prev => !prev)}><p>{email[0]}</p> </div> {showLogout && <div className="logoutBox"><button onClick={logoutHandler}>Log Out</button></div>}</div> : <Link to="/login">
                         <button className="login-btn">Login</button>
                     </Link>}
@@ -65,6 +63,11 @@ export default function Header() {
             <button className="menu-btn" onClick={() => setShowMenu(!showMenu)}>
                 ☰
             </button>
+            <div className="loginBox">
+                {email ? <div className="profileiconBox"> <div className="profileicon" onClick={() => setShowLogout(prev => !prev)}><p>{email[0]}</p> </div> {showLogout && <div className="logoutBox"><button onClick={logoutHandler}>Log Out</button></div>}</div> : <Link to="/login">
+                    <button className="login-btn">Login</button>
+                </Link>}
+            </div>
             <div className={`sideBar ${showMenu ? "sideBarshow" : "sideBarhide"}`}>
                 <nav>
                     <Link to="" className="nav-link" onClick={() => setShowMenu(false)}><p>Home</p></Link>
