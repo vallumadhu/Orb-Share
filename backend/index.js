@@ -163,6 +163,7 @@ app.post("/updatenote", async (req, res) => {
     if (!note) {
         return res.status(400).json({ message: "note is required" })
     }
+    if ((!view || !edit || !access) && !email) return res.status(401).json({ message: "You can only edit access control of your notes." })
 
     const existing = await noteModel.findOne({ id: id })
     console.log(existing)
