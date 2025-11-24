@@ -4,7 +4,7 @@ import { AppContext } from "./App"
 
 export default function Note() {
     const navigate = useNavigate()
-    const { setalert, email } = useContext(AppContext)
+    const { setalert, email, setshowQR, seturl } = useContext(AppContext)
     const [access, setAccess] = useState([]);
     const [edit, setedit] = useState(true);
     const [view, setview] = useState(true);
@@ -51,6 +51,8 @@ export default function Note() {
             })
             if (res.status == 200) {
                 setalert("Saved Successfully!", "good")
+                seturl(`https://orbshare.netlify.app/note/${noteid}`)
+                setshowQR(true)
                 navigate(`/note/${noteid}`)
             }
 

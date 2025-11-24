@@ -96,7 +96,7 @@ const User = mongoose.model("User", userSchema);
 const noteModel = mongoose.model("noteModel", noteSchema)
 
 app.use(cors({
-    origin: ["https://nanopath.netlify.app", "https://orbshare.netlify.app"],
+    origin: ["https://nanopath.netlify.app", "https://orbshare.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
 }));
 

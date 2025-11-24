@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { AppContext } from "./App"
 
 export default function ReciveNote() {
-    const { setalert, email } = useContext(AppContext)
+    const { setalert, email, setshowQR, seturl } = useContext(AppContext)
     const [access, setAccess] = useState([]);
     const [edit, setedit] = useState(true);
     const [view, setview] = useState(true);
@@ -45,6 +45,8 @@ export default function ReciveNote() {
             })
             if (res.status == 200) {
                 setalert("Saved Successfully!", "good")
+                seturl(`https://orbshare.netlify.app/note/${id}`)
+                setshowQR(true)
             } else {
                 const data = await res.json()
                 setalert(data.message, "bad")
