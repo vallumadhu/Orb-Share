@@ -1,279 +1,32 @@
+require('dotenv').config()
 const express = require("express")
-const mongoose = require("mongoose")
-const randomWords = require('random-words')
-const crypto = require("crypto")
-const cors = require("cors");
-require("dotenv").config();
-const jwt = require('jsonwebtoken');
-const { type } = require("os");
-const PORT = process.env.PORT || 3000
+const cors = require("cors")
+const { connectDB } = require("./controllers/common")
+const noteRouter = require("./routes/note")
+const authRouter = require("./routes/auth")
 
-
+const PORT = process.env.PORT || 3000;
 const app = express()
 
-const authenticate = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ message: "No token provided" });
-    }
-    const token = authHeader.split(" ")[1];
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        return res.status(401).json({ message: "Token is not valid" });
-    }
-};
-
-const getEmail = (req) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return null;
-    }
-    const token = authHeader.split(" ")[1];
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.userId
-    } catch (err) {
-        return null;
-    }
-}
-
-mongoose.connect(process.env.ATLAS_URL)
+connectDB(process.env.ATLAS_URL)
     .then(() => console.log("Mongodb connected"))
-    .catch((e) => console.error("failed to connect to mongodb", e.message))
-
-const noteSchema = mongoose.Schema(
-    {
-        id: {
-            type: String,
-            unique: true,
-            required: true
-        },
-        email: {
-            type: String,
-            default: null,
-            lowercase: true
-        },
-        note: {
-            type: String,
-            required: true
-        },
-        view: {
-            type: Boolean,
-            default: true
-        },
-        edit: {
-            type: Boolean,
-            default: true
-        },
-        access: {
-            type: [String],
-            default: []
-        }
-    }
-)
-
-const userSchema = new mongoose.Schema(
-    {
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-            trim: true
-        },
-        password: {
-            type: String,
-            required: true,
-            minlength: 6
-        }
-    },
-    { timestamps: true }
-);
-
-const User = mongoose.model("User", userSchema);
-const noteModel = mongoose.model("noteModel", noteSchema)
+    .catch((e) => console.error("Failed to connect to MongoDB", e.message))
 
 app.use(cors({
     origin: ["https://nanopath.netlify.app", "https://orbshare.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
-}));
+}))
 
-app.use(express.json());
+app.use(express.json())
 
-app.post("/note", async (req, res) => {
-    const { id } = req.query
-    let { note, view = true, edit = true, access = [] } = req.body
-    let email = getEmail(req)
-    email = email ? email.toLowerCase() : null
-    if (!id) {
-        return res.status(400).json({ message: "id query is required" })
-    }
-    const existing = await noteModel.findOne({ id })
-    if (existing) {
-        return res.status(400).json({ message: "note already exists with id" })
-    }
-    if (!note) {
-        return res.status(400).json({ message: "note is required" })
-    }
-    if ((!view || !edit || access.length > 0) && !email) return res.status(401).json({ message: "authentication error" });
-
-    const newNode = new noteModel({ id, note, email, view, edit, access })
-    await newNode.save()
-
-    return res.status(200).json(newNode)
-})
-
-app.post("/fetchnote", async (req, res) => {
-    const query = req.query
-    let email = getEmail(req)
-    email = email ? email.toLowerCase() : null
-    if (!query.id) {
-        return res.status(400).json({ message: "id query is required" })
-    }
-    const note = await noteModel.findOne({ id: query.id })
-    if (!note) {
-        return res.status(404).json({ message: "note doesn't exist" })
-    }
-    if (note.view === false) {
-        if (!email) return res.status(400).json({ "message": "You don't have access to view this note" })
-
-        if (email != note.email && !note.access.includes(email)) return res.status(400).json({ "message": "You don't have Access to view" })
-    }
-    res.status(200).json({ "note": note })
-})
-app.get("/note-random-id", async (req, res) => {
-    let id = null;
-    while (true) {
-        id = randomWords.generate(2).join("-")
-        const exists = await noteModel.findOne({ id })
-        if (!exists) break
-    }
-
-    return res.status(200).json({ "id": id })
-})
-
-app.post("/updatenote", async (req, res) => {
-    const { id } = req.query
-    let { note, view = true, edit = true, access = [] } = req.body
-    let email = getEmail(req)
-    email = email ? email.toLowerCase() : null
-    if (!id) {
-        return res.status(400).json({ message: "id query is required" })
-    }
-    if (!note) {
-        return res.status(400).json({ message: "note is required" })
-    }
-    const existing = await noteModel.findOne({ id: id })
-    if ((!view || !edit) && (!email || (email != existing.email && !existing.access.includes(email)))) return res.status(401).json({ message: "You can only edit access control of your notes." })
-    console.log(existing)
-    if (existing.edit === false) {
-        if (!email) return res.status(401).json({ message: "You don't have access to edit this note" });
-        if (email != existing.email && !existing.access.includes(email)) return res.status(400).json({ "message": "You don't have access to edit this note" });
-    }
-
-    try {
-        let result = await noteModel.updateOne(
-            { id: id },
-            { $set: { note: note, access: access, view: view, edit: edit } }
-        )
-    }
-    catch (error) {
-        return res.status(500).json({ "message": "some error occured during updaing database" })
-    }
-
-    res.status(200).json({ "message": "updated database successfully" })
-})
-
-app.post("/login", async (req, res) => {
-    console.log("Login endpoint hit, body:", req.body);
-    const body = req.body
-    if (!body.email || !body.password) {
-        return res.status(400).json({ message: "Email and password required" })
-    }
-
-    let email = body.email
-    email = email ? email.toLowerCase() : null
-
-    const user = await User.findOne({ email })
-    if (!user) {
-        return res.status(404).json({ message: "User not found" })
-    }
-
-    if (user.password != body.password) {
-        return res.status(400).json({ message: "Invaild Password" })
-    }
-
-    const token = jwt.sign(
-        { userId: user.email },
-        process.env.JWT_SECRET
-    )
-    res.setHeader("Authorization", `Bearer ${token}`);
-    res.setHeader("Access-Control-Expose-Headers", "Authorization");
-    res.status(200).json({
-        message: "Login successful",
-        user: {
-            email: user.email,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
-        }
-    });
-})
-
-app.post("/register", async (req, res) => {
-    const body = req.body
-    let email = body.email
-    email = email ? email.toLowerCase() : null
-    if (!email || !body.password) {
-        return res.status(400).json({ message: "Email and password required" })
-    }
-
-    const newUser = new User({
-        email: body.email,
-        password: body.password
-    })
-
-    newUser.save()
-        .then(user => {
-            return res.status(200).json({ message: "registered" })
-        })
-        .catch(error => {
-            console.error("Failed to register:", error.message)
-            return res.status(400).json({ message: error.message })
-        })
-})
-
-app.get("/email", authenticate, (req, res) => {
-    if (req.user) {
-        res.status(200).json({ "email": req.user })
-    } else {
-        res.status(404).json({ "message": "User Not Found" })
-    }
-})
-
-app.get("/data", authenticate, async (req, res) => {
-    let email = req.user.userId;
-
-    if (!email) {
-        return res.status(401).json({ message: "User Not Found" });
-    }
-    email = email.toLowerCase()
-    try {
-        const notes = await noteModel.find({ email: email })
-        res.status(200).json({ "email": email, "notes": notes })
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server Error" })
-    }
-});
+app.use("/", authRouter)
+app.use("/", noteRouter)
 
 app.get("/health", (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.status(200).json({ status: "ok" });
-});
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.status(200).json({ status: "ok" })
+})
 
 app.listen(PORT, () => {
-    console.log(`listening to port ${PORT}`)
+    console.log(`Listening on port ${PORT}`)
 })
