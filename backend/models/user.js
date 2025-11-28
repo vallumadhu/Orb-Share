@@ -18,6 +18,28 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const tempUserSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 6
+    },
+    otp: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 300
+    }
+});
 
-module.exports = { User }
+
+const User = mongoose.model("User", userSchema);
+const tempUser = mongoose.model("tempUser", tempUserSchema)
+
+module.exports = { User, tempUser }

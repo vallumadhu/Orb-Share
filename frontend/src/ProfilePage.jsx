@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { AppContext } from "./App"
 import { useRef } from "react"
 export default function ProfilePage() {
-    const { setalert, email, setemail } = useContext(AppContext)
+    const { setalert, email, setemail,setShowLoading } = useContext(AppContext)
     const previewBoxref = useRef()
     const [notes, setnotes] = useState([])
     const [previewnote, setpreviewnote] = useState("")
@@ -45,7 +45,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) return;
-
+        setShowLoading(true)
         fetch("https://nano-path.onrender.com/data", {
             headers: {
                 "Content-Type": "application/json",
@@ -56,12 +56,14 @@ export default function ProfilePage() {
             .then(data => {
                 if (!data) {
                     console.warn("Error while fetching data")
+                    setShowLoading(false)
                     return;
                 }
                 setemail(data.email)
                 setnotes(data.notes)
             })
             .catch(err => console.error("Fetch error:", err));
+        setShowLoading(false)
     }, []);
     return (
         <section className="profilePage">

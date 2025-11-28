@@ -28,6 +28,11 @@ const authenticate = (req, res, next) => {
     }
 };
 
+const getOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+
 const connectDB = (url) => {
     return mongoose.connect(url);
 };
@@ -36,4 +41,5 @@ module.exports = {
     getEmail,
     authenticate,
     connectDB,
+    getOTP
 };

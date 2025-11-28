@@ -1,7 +1,9 @@
 const express = require("express")
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/user");
-const { authenticate } = require("../controllers/common");
+const { User, tempUser } = require("../models/user");
+const otpTemplate = require("../html_templates/mail_otp")
+const { authenticate, getOTP } = require("../controllers/common");
+const sendMail = require("../controllers/mail");
 const router = express.Router()
 
 router.post("/login", async (req, res) => {
@@ -46,20 +48,65 @@ router.post("/register", async (req, res) => {
     if (!email || !body.password) {
         return res.status(400).json({ message: "Email and password required" })
     }
-
-    const newUser = new User({
+    const otp = getOTP()
+    const newUser = new tempUser({
         email: body.email,
-        password: body.password
+        password: body.password,
+        otp: otp
     })
+    const HTMLotpTemplate = otpTemplate(otp, "https://orbshare.netlify.app/")
+    try {
+        sendMail(body.email, "Registration OTP Orb Share", HTMLotpTemplate)
+    } catch {
+        return res.status(500).json({ message: "Failed to send OTP" })
+    }
+    //deleting the exiting entry in tempUser
+    try {
+        const existing = await tempUser.findOne({ email })
+        if (existing) {
+            await tempUser.deleteOne({ email })
+        }
+    } catch (err) {
+        console.log(err)
+    }
 
     newUser.save()
         .then(user => {
-            return res.status(200).json({ message: "registered" })
+            return res.status(200).json({ message: `OTP Send to ${body.email}` })
         })
         .catch(error => {
             console.error("Failed to register:", error.message)
             return res.status(400).json({ message: error.message })
         })
+})
+
+router.post("/verifyregistration", async (req, res) => {
+    const { email, otp } = req.body
+    if (!email) return res.status(400).json({ message: "Email Required" })
+    if (!otp) return res.status(400).json({ message: "OTP Required" })
+
+    try {
+        const item = await tempUser.findOne({ email });
+        if (!item) {
+            return res.status(400).json({ message: "User not found or OTP expired" });
+        }
+        if (item.otp !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+        const newUser = new User({
+            email: item.email,
+            password: item.password
+        });
+
+        await newUser.save();
+        await tempUser.deleteOne({ email });
+        return res.status(200).json({ message: "Registration successful" });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Server error" });
+    }
+
 })
 
 router.get("/email", authenticate, (req, res) => {

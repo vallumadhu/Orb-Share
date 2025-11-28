@@ -4,7 +4,7 @@ import { AppContext } from "./App"
 
 export default function Note() {
     const navigate = useNavigate()
-    const { setalert, email, setshowQR, seturl } = useContext(AppContext)
+    const { setalert, email, setshowQR, seturl,setShowLoading } = useContext(AppContext)
     const [access, setAccess] = useState([]);
     const [edit, setedit] = useState(true);
     const [view, setview] = useState(true);
@@ -15,6 +15,7 @@ export default function Note() {
     const [noteid, setnoteid] = useState("")
 
     const getRandomnoteid = async () => {
+        setShowLoading(true)
         try {
             const res = await fetch("https://nano-path.onrender.com/note-random-id")
             const message = await res.json()
@@ -23,6 +24,7 @@ export default function Note() {
             console.error(e)
             setalert("Something went wrong!", "bad")
         }
+        setShowLoading(false)
     }
 
     const postNote = async () => {
@@ -34,6 +36,7 @@ export default function Note() {
             setalert("Give your note a name", "bad")
             return
         }
+        setShowLoading(true)
         const token = localStorage.getItem("token")
         try {
             const res = await fetch(`https://nano-path.onrender.com/note?id=${noteid}`, {
@@ -60,6 +63,7 @@ export default function Note() {
             console.error(e)
             setalert("Error while saving", "bad")
         }
+        setShowLoading(false)
     }
 
     return (<section className="note-section">

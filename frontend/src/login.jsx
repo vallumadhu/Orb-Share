@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { AppContext } from "./App"
 
 export default function Login() {
-    const { setalert, setemail } = useContext(AppContext)
+    const { setalert, setemail,setShowLoading } = useContext(AppContext)
     const ballRef = useRef()
     const getEmail = (token) => {
         fetch("https://nano-path.onrender.com/email", {
@@ -42,6 +42,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
+        setShowLoading(true)
         try {
             const response = await fetch("https://nano-path.onrender.com/login", {
                 method: 'POST',
@@ -70,6 +71,7 @@ export default function Login() {
             console.error("Error:", error);
             setalert("Invaild Credentials", "bad")
         }
+        setShowLoading(false)
     }
 
 

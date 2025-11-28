@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { AppContext } from "./App"
 
 export default function Register() {
-    const { setalert, setemail } = useContext(AppContext)
+    const { setalert, setemail, setShowLoading } = useContext(AppContext)
     const ballRef = useRef()
     function moveBallRandomly() {
         const left = Math.random() * (window.innerWidth - 100);
@@ -24,6 +24,7 @@ export default function Register() {
 
     const onSubmit = async (data) => {
         console.log(data)
+        setShowLoading(true)
         try {
             const response = await fetch("https://nano-path.onrender.com/register", {
                 method: 'POST',
@@ -47,6 +48,7 @@ export default function Register() {
             console.error("Error:", error);
             setalert(error.message, "bad")
         }
+        setShowLoading(false)
     }
 
 

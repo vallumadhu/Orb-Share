@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { AppContext } from "./App"
 
 export default function ReciveNote() {
-    const { setalert, email, setshowQR, seturl } = useContext(AppContext)
+    const { setalert, email, setshowQR, seturl,setShowLoading } = useContext(AppContext)
     const [access, setAccess] = useState([]);
     const [edit, setedit] = useState(true);
     const [view, setview] = useState(true);
@@ -28,6 +28,7 @@ export default function ReciveNote() {
             setalert("Give your note a name", "bad")
             return
         }
+        setShowLoading(true)
         const token = localStorage.getItem("token")
         try {
             const res = await fetch(`https://nano-path.onrender.com/updatenote?id=${id}`, {
@@ -55,10 +56,12 @@ export default function ReciveNote() {
             console.error(e)
             setalert(e.message, "bad")
         }
+        setShowLoading(false)
     }
 
     useEffect(() => {
         async function fetchNote() {
+            setShowLoading(true)
             const token = localStorage.getItem("token")
             try {
                 const res = await fetch(`https://nano-path.onrender.com/fetchnote?id=${id}`, {
@@ -105,6 +108,7 @@ export default function ReciveNote() {
                     setalert("Try again", "bad")
                 }
             }
+            setShowLoading(false)
         }
         fetchNote();
         heightHandle()

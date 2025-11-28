@@ -851,7 +851,7 @@ input {
     flex-wrap: wrap;
 }
 
-.profilePage .child h3{
+.profilePage .child h3 {
     color: white;
     margin: 15px 0;
     border-bottom: 1px solid #c0c0c0;
@@ -868,9 +868,10 @@ input {
     margin: 15px;
 }
 
-.profilePage .child .noContent{
+.profilePage .child .noContent {
     text-align: center;
 }
+
 .profilePage .child .content p {
     margin: 10px 0;
     font-size: 15px;
@@ -925,7 +926,8 @@ input {
     box-shadow: 0px 0px 12px rgba(255, 90, 90, 0.6);
     transform: scale(1);
 }
-.profilePage .previewBox{
+
+.profilePage .previewBox {
     padding: 12px;
     background-color: #161616;
     border-radius: 12px;
@@ -935,6 +937,29 @@ input {
     overflow: hidden;
     font-size: 0.7rem;
 }
+
+.loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("/spinner-solid-full.svg");
+    animation: spinRadial 1500ms linear infinite;
+}
+
+@keyframes spinRadial {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 /*Animations */
 @keyframes fadeOut {
@@ -1110,17 +1135,21 @@ input {
     .result-container {
         max-width: 98%;
     }
-    .profilePage .wrapper .profileIcon{
+
+    .profilePage .wrapper .profileIcon {
         width: 75px;
         height: 75px;
     }
-    .profilePage .wrapper{
+
+    .profilePage .wrapper {
         height: 25vh;
     }
-    .profilePage .child{
+
+    .profilePage .child {
         min-width: 0px;
     }
-    .previewBox{
+
+    .previewBox {
         display: none;
     }
 }
