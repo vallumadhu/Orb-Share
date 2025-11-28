@@ -93,18 +93,18 @@ router.post("/verifyregistration", async (req, res) => {
         if (item.otp !== otp) {
             return res.status(400).json({ message: "Invalid OTP" });
         }
+        await tempUser.deleteOne({ email });
+
         const newUser = new User({
             email: item.email,
             password: item.password
         });
-
         await newUser.save();
-        await tempUser.deleteOne({ email });
         return res.status(200).json({ message: "Registration successful" });
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(400).json({ message: "User already registered" });
     }
 
 })
