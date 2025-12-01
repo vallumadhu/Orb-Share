@@ -51,7 +51,7 @@ const mail_otp_template = (otp, verifyURL) => {
            font-size: 16px;
            font-weight: 600;
        ">
-        Complete Registration
+        Orb Share
     </a>
 
     <p style="

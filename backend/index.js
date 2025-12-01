@@ -14,7 +14,8 @@ connectDB(process.env.ATLAS_URL)
     .catch((e) => console.error("Failed to connect to MongoDB", e.message))
 
 app.use(cors({
-    origin: "https://orbshare.netlify.app",
+    // origin: "https://orbshare.netlify.app",
+    origin: "*",
     methods: ["GET", "POST"],
 }))
 
