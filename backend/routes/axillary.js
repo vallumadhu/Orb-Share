@@ -39,7 +39,12 @@ async function invokeChute(prompt) {
 
 router.post("/note/formatter", async (req, res) => {
     const noteData = req.body.note
-    const prompt = `Detect the programming language in this note, fix indentation and syntax errors, and return only the corrected code and text exactly as in the note, nothing else: ${noteData}`
+    const prompt = `Detect the programming language in this note. 
+- Fix indentation and syntax errors only in the code. 
+- Do not change any text, paragraphs, or other natural language content. 
+- Keep everything else exactly as in the note. 
+Return only the resulting content: ${noteData}`;
+
     const chuteResponse = await invokeChute(prompt);
     const formattedNote = chuteResponse.choices?.[0]?.message?.content || "";
 
@@ -51,7 +56,12 @@ router.post("/note/formatter", async (req, res) => {
 
 router.post("/note/grammarfix", async (req, res) => {
     const noteData = req.body.note;
-    const prompt = `Correct the grammar, punctuation, and readability of this text without changing its meaning. Return only the corrected text: ${noteData}`;
+    const prompt = `Check the following content. 
+- Do not modify any code. Leave all code blocks exactly as they are.
+- Correct grammar, punctuation, and readability only in natural language text, comments, and paragraphs, without changing their meaning.
+- Keep the original structure, spacing, and code intact.
+Return only the corrected content: ${noteData}`;
+
 
     const chuteResponse = await invokeChute(prompt);
     const correctedNote = chuteResponse?.choices?.[0]?.message?.content || "";

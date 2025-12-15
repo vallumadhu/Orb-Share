@@ -118,6 +118,7 @@ main {
     transition: all 350ms ease-in-out;
     display: grid;
     overflow: hidden;
+    z-index: 10;
 }
 
 .sideBar nav {
@@ -302,6 +303,7 @@ button:hover {
     border-radius: 10px;
     margin: 10px;
     min-width: 500px;
+    position: relative;
 }
 
 .text-box textarea {
@@ -317,6 +319,50 @@ button:hover {
     font-size: 1rem;
     padding: 8px;
     overflow-y: scroll;
+}
+
+.axillary-feature-box {
+    position: absolute;
+    top: -44px;
+    left: 0px;
+    display: flex;
+    gap: 15px;
+    padding: 5px;
+    border-radius: 14px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background: #161616;
+    backdrop-filter: blur(8px);
+    opacity: 0.35;
+    transition: all 0.25s ease;
+    z-index: 1;
+}
+
+.text-box:hover .axillary-feature-box {
+    opacity: 1;
+}
+
+.axillary-feature-box button {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2a2a2a, #000000);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 0 0 transparent;
+}
+
+.axillary-feature-box img {
+    width: 18px;
+    height: 18px;
+}
+
+.axillary-feature-box button:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
 }
 
 .text-box textarea::-webkit-scrollbar,

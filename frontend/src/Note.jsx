@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AppContext } from "./App"
+import codeIcon from "./assets/code-solid-full.svg";
+import chatIcon from "./assets/comment-solid-full.svg";
+import textIcon from "./assets/spell-check-solid-full.svg";
 
 export default function Note() {
     const navigate = useNavigate()
-    const { setalert, email, setshowQR, seturl,setShowLoading } = useContext(AppContext)
+    const { setalert, email, setshowQR, seturl, setShowLoading } = useContext(AppContext)
     const [access, setAccess] = useState([]);
     const [edit, setedit] = useState(true);
     const [view, setview] = useState(true);
@@ -26,6 +29,74 @@ export default function Note() {
         }
         setShowLoading(false)
     }
+
+    const fixIndentation = async () => {
+        setShowLoading(true);
+
+        try {
+            const res = await fetch(
+                "https://nano-path.onrender.com/note/formatter",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ note }),
+                }
+            );
+            if (!res.ok) {
+                setalert("Error while indenting", "bad")
+                throw new Error("Formatter API failed")
+            }
+            const data = await res.json()
+            if (!data.formatted) {
+                setalert("Empty code returned", "bad")
+                throw new Error("Formatter API failed")
+            }
+            setnote(data.formatted)
+            console.log(data)
+            setalert("Successfully indented", "good")
+        } catch (e) {
+            console.error(e);
+            setalert("Error while indenting", "bad")
+        } finally {
+            setShowLoading(false);
+        }
+    };
+
+    const fixGrammar = async () => {
+        setShowLoading(true);
+
+        try {
+            const res = await fetch(
+                "https://nano-path.onrender.com/note/grammarfix",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ note }),
+                }
+            );
+            if (!res.ok) {
+                setalert("Error while Correcting Grammar", "bad")
+                throw new Error("Grammar API failed")
+            }
+            const data = await res.json()
+            setnote(data.corrected)
+            if (!data.corrected) {
+                setalert("Empty note returned", "bad")
+                throw new Error("Grammar API failed")
+            }
+            setalert("Successfully Corrected Grammar", "good")
+        } catch (e) {
+            console.error(e);
+            setalert("Error while Correcting Grammar", "bad")
+        } finally {
+            setShowLoading(false);
+        }
+    };
+
 
     const postNote = async () => {
         if (!note.trim()) {
@@ -68,7 +139,12 @@ export default function Note() {
 
     return (<section className="note-section">
         <div className="text-box">
-            <textarea name="" id="" ref={textAreaRef} onChange={(e) => setnote(e.target.value)} placeholder="Write your note and save when you're done."></textarea>
+            <div className="axillary-feature-box">
+                <button onClick={fixIndentation}><img src={codeIcon} alt="indentation fix" /></button>
+                <button onClick={fixGrammar}><img src={textIcon} alt="grammar fix" /></button>
+                <button><img src={chatIcon} alt="ask ai" /></button>
+            </div>
+            <textarea name="" id="" ref={textAreaRef} onChange={(e) => setnote(e.target.value)} value={note} placeholder="Write your note and save when you're done."></textarea>
         </div>
         <div className="note-controls">
             <div className="note-id-controls">
