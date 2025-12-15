@@ -2,7 +2,7 @@ const express = require("express");
 require('dotenv').config()
 const router = express.Router()
 
-async function invokeChute(prompt) {
+async function invokeChute(prompt,temp) {
     try {
         const response = await fetch("https://llm.chutes.ai/v1/chat/completions", {
             method: "POST",
@@ -19,7 +19,7 @@ async function invokeChute(prompt) {
                     }
                 ],
                 max_tokens: 1024,
-                temperature: 0.7
+                temperature: temp
             })
         });
 
@@ -54,7 +54,7 @@ Content to process:
 ${noteData}
 `;
 
-    const chuteResponse = await invokeChute(prompt);
+    const chuteResponse = await invokeChute(prompt,0.1);
     const formattedNote = chuteResponse.choices?.[0]?.message?.content || "";
 
     res.status(200).json({
@@ -81,7 +81,7 @@ ${noteData}
 `;
 
 
-    const chuteResponse = await invokeChute(prompt);
+    const chuteResponse = await invokeChute(prompt,0.15);
     const correctedNote = chuteResponse?.choices?.[0]?.message?.content || "";
 
     res.status(200).json({
@@ -97,7 +97,7 @@ router.post("/note/ai", async (req, res) => {
 A user has some queries related to this note: "${noteData}". Here is the previous conversation context (if any) for reference: "${previousChatsContext || 'None'}". Read and understand this note and the previous conversation, then provide a clear, concise, and professional answer to resolve the user's query: "${userPrompt}". Do not add unnecessary explanations, jokes, or filler—focus only on answering the query accurately. You may improve or clarify the answer if needed, but only when it helps make the response more correct or understandable.
 `;
 
-    const chuteResponse = await invokeChute(prompt);
+    const chuteResponse = await invokeChute(prompt,0.6);
     const aiAnswer = chuteResponse?.choices?.[0]?.message?.content || "";
 
     res.status(200).json({
