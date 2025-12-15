@@ -4,6 +4,7 @@ const cors = require("cors")
 const { connectDB } = require("./controllers/common")
 const noteRouter = require("./routes/note")
 const authRouter = require("./routes/auth")
+const axillaryRouter = require("./routes/axillary")
 const sendMail = require("./controllers/mail")
 
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(express.json())
 
 app.use("/", authRouter)
 app.use("/", noteRouter)
+app.use("/", axillaryRouter)
 
 app.get("/health", (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*")
