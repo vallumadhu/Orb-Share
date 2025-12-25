@@ -1,0 +1,8 @@
+fastapi==0.111.1
+pydantic==2.6.3
+requests==2.32.0
+sentence-transformers==2.2.2
+torch>=2.2.0
+pinecone-client==5.3.2
+langchain==0.1.14
+uvicorn==0.23.2
