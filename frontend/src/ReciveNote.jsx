@@ -126,7 +126,8 @@ export default function ReciveNote() {
 
     const chatsetup = async () => {
         setalert("opening chatbot...", "good")
-        fetch("http://localhost:8000/api/embednote", {
+        setalert("feeding note to chatbot","good")
+        fetch("https://ai-backend-dazz.onrender.com/api/embednote", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -142,13 +143,14 @@ export default function ReciveNote() {
             .then(data => {
                 console.log(data)
                 setunique_note_id(data.note_id);
-                setIsOpen(true);
+                setalert("feeded note to chatbot","good")
             })
             .catch(err => {
                 console.error(err);
-                setalert("Error while loading chatbot", "bad")
+                setalert("Error while feeding chatbot", "bad")
             });
 
+        setIsOpen(true);
     }
 
     useEffect(() => {

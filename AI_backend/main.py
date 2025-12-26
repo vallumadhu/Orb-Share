@@ -5,6 +5,10 @@ from fastapi.responses import JSONResponse
 from routes.note import router as notes_router
 app = FastAPI()
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
+
 origins = [
     "https://orbshare.netlify.app",
     "http://localhost:5173"
