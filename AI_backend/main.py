@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from routes.note import router as notes_router
 app = FastAPI()
 
-@app.get("/health")
+@app.head("/health")
 def health():
     return {"status": "healthy"}
 
